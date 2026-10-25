@@ -1,0 +1,91 @@
+# Paquet « geometrie » : formules de géométrie plane.
+# Toutes les longueurs sont dans la même unité (mètres, centimètres…) ; les aires dans cette unité au carré.
+# Les points sont des structures { x: 1, y: 2 } ; un polygone est une liste de points dans l'ordre du contour.
+
+fonction verifier_positif(valeur, nom)
+  si valeur < 0 alors
+    lever(nom + " ne peut pas être négatif (reçu : " + valeur + ").")
+  fin
+fin
+
+fonction aire_rectangle(longueur, largeur)
+  verifier_positif(longueur, "la longueur")
+  verifier_positif(largeur, "la largeur")
+  renvoyer longueur * largeur
+fin
+
+fonction perimetre_rectangle(longueur, largeur)
+  verifier_positif(longueur, "la longueur")
+  verifier_positif(largeur, "la largeur")
+  renvoyer 2 * (longueur + largeur)
+fin
+
+fonction aire_cercle(rayon)
+  verifier_positif(rayon, "le rayon")
+  renvoyer pi() * rayon * rayon
+fin
+
+fonction perimetre_cercle(rayon)
+  verifier_positif(rayon, "le rayon")
+  renvoyer 2 * pi() * rayon
+fin
+
+fonction aire_triangle(base, hauteur)
+  verifier_positif(base, "la base")
+  verifier_positif(hauteur, "la hauteur")
+  renvoyer base * hauteur / 2
+fin
+
+# Vrai si trois côtés peuvent former un triangle (chaque côté est plus court que la somme des deux autres).
+fonction triangle_possible(a, b, c)
+  renvoyer a > 0 et b > 0 et c > 0 et a < b + c et b < a + c et c < a + b
+fin
+
+# Formule de Héron : l'aire d'un triangle connaissant ses trois côtés.
+fonction aire_triangle_cotes(a, b, c)
+  si non triangle_possible(a, b, c) alors
+    lever("ces trois côtés ne forment pas un triangle : " + a + ", " + b + ", " + c + ".")
+  fin
+  soit s = (a + b + c) / 2
+  renvoyer racine(s * (s - a) * (s - b) * (s - c))
+fin
+
+# Théorème de Pythagore : l'hypoténuse d'un triangle rectangle.
+fonction hypotenuse(a, b)
+  verifier_positif(a, "le premier côté")
+  verifier_positif(b, "le second côté")
+  renvoyer racine(a * a + b * b)
+fin
+
+fonction distance(p, q)
+  soit dx = lireCle(p, "x") - lireCle(q, "x")
+  soit dy = lireCle(p, "y") - lireCle(q, "y")
+  renvoyer racine(dx * dx + dy * dy)
+fin
+
+# Aire d'un polygone simple (formule du lacet), quel que soit le sens de parcours.
+fonction aire_polygone(points)
+  soit n = taille(points)
+  si n < 3 alors
+    lever("un polygone a au moins 3 points (reçu : " + n + ").")
+  fin
+  soit somme = 0
+  pour i allantde 0 a n - 1 faire
+    soit p = lireElement(points, i)
+    soit q = lireElement(points, (i + 1) % n)
+    somme = somme + lireCle(p, "x") * lireCle(q, "y") - lireCle(q, "x") * lireCle(p, "y")
+  fin
+  renvoyer absolu(somme) / 2
+fin
+
+fonction perimetre_polygone(points)
+  soit n = taille(points)
+  si n < 3 alors
+    lever("un polygone a au moins 3 points (reçu : " + n + ").")
+  fin
+  soit total = 0
+  pour i allantde 0 a n - 1 faire
+    total = total + distance(lireElement(points, i), lireElement(points, (i + 1) % n))
+  fin
+  renvoyer total
+fin

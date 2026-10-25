@@ -1,0 +1,7 @@
+{
+  "nom": "geometrie",
+  "version": "1.0.0",
+  "description": "Aires, périmètres et distances : rectangle, triangle, cercle, polygone.",
+  "principal": "principal.fa",
+  "fichiers": ["principal.fa", "tests.fa", "LISEZMOI.md"]
+}
